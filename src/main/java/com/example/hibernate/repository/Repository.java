@@ -1,51 +1,18 @@
 package com.example.hibernate.repository;
 
 import com.example.hibernate.entity.Person;
-import jakarta.persistence.*;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.hibernate.entity.PersonId;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.IntStream;
+import java.util.Optional;
 
-@org.springframework.stereotype.Repository
-public class Repository {
+public interface Repository extends JpaRepository<Person, PersonId> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    List<Person> findByCityOfLiving(String city);
 
-    public List<Person> getPersonsByCity(String city) {
-        var query = entityManager.createQuery("select p from Person p where p.cityOfLiving = :city",
-                Person.class);
-        query.setParameter("city_of_living", city);
-        return query.getResultList();
-    }
+    Optional<Person> findByPersonIdNameAndAndPersonIdSurname(String name, String surname);
 
-    @Transactional
-    public List<Person> savePersons() {
-        Random random = new Random();
-
-        var names = Arrays.asList("Andrey", "Mike", "Sergey", "Ivan", "Arseniy");
-        var surnames = Arrays.asList("Sidorov", "Sukhanov", "Demin", "Phedorov", "Tikhonov");
-        var cities = Arrays.asList("Moscow", "Saint-Petersburg", "Ekaterinburg");
-
-        IntStream.range(0, 100)
-                .forEach(i -> {
-                    var person = Person.builder()
-                            .name(names.get(random.nextInt(names.size())))
-                            .surname(surnames.get(random.nextInt(surnames.size())))
-                            .age(random.nextInt(100))
-                            .cityOfLiving(cities.get(random.nextInt(cities.size())))
-                            .phoneNumber("+79" + random.nextInt(999999999))
-                            .build();
-
-                    this.entityManager.persist(person);
-
-                });
-
-        var query = entityManager.createQuery("select p from Person p", Person.class);
-        return query.getResultList();
-    }
+    List<Person> findByPersonIdAge(int age);
 
 }
