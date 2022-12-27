@@ -5,6 +5,7 @@ import com.example.hibernate.repository.Repository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class Service {
@@ -15,7 +16,18 @@ public class Service {
         this.repository = repository;
     }
 
-    public List<Person> getPersonsByCity(String city) {
-        return repository.getPersonsByCity(city);
+    public List<Person> findByCityOfLiving(String city){
+        return repository.findByCityOfLiving(city);
     }
+
+    public Optional<Person> findByPersonIdNameAndAndPersonIdSurname(String name, String surname){
+        return repository.findByPersonIdNameAndAndPersonIdSurname(name,surname);
+    }
+
+    public List<Person> findByPersonIdAge(int age){
+        return repository.findByPersonIdAge(age);
+    }
+
 }
+
+
